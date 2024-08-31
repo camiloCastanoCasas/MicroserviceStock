@@ -4,7 +4,6 @@ import com.microservice.stock.domain.model.Category;
 import com.microservice.stock.domain.spi.ICategoryPersistencePort;
 import com.microservice.stock.infraestructure.out.jpa.mapper.CategoryEntityMapper;
 import com.microservice.stock.infraestructure.out.jpa.repository.ICategoryRepository;
-//import com.microservice.stock.infraestructure.util.InfraestructureConstants;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
