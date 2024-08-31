@@ -19,7 +19,7 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
 
     @Override
     public boolean existsByName(String name) {
-        return false;
+        return brandRepository.findByName(name).isPresent();
     }
 
 }
