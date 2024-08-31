@@ -23,8 +23,8 @@ public class BrandUseCase implements IBrandServicePort {
         if (brand.getName().trim().isEmpty()) {
             errors.add(DomainConstants.FIELD_NAME_NULL_MESSAGE);
         }
-        if (brand.getName().length() > DomainConstants.FIELD_NAME_CATEGORY_SIZE_MAX) {
-            errors.add(DomainConstants.FIELD_NAME_CATEGORY_SIZE_MESSAGE);
+        if (brand.getName().length() > DomainConstants.FIELD_NAME_BRAND_SIZE_MAX) {
+            errors.add(DomainConstants.FIELD_NAME_BRAND_SIZE_MESSAGE);
         }
         if (brand.getDescription().trim().isEmpty()) {
             errors.add(DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
