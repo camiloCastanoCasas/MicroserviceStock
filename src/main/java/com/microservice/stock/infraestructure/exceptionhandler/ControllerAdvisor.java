@@ -15,7 +15,6 @@ import java.util.Map;
 @ControllerAdvice
 public class ControllerAdvisor {
 
-    private static final String MESSAGE = "message";
     private static final String TIMESTAMP = "timestamp";
     private static final String ERRORS = "errors";
 
