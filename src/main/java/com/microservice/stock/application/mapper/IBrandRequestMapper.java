@@ -8,5 +8,5 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface IBrandRequestMapper {
     @Mapping(target = "id", ignore = true)
-    Brand toBrand(BrandRequest BrandRequest);
+    Brand toBrand(BrandRequest brandRequest);
 }

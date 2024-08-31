@@ -1,9 +1,5 @@
 package com.microservice.stock.domain.model;
 
-//import com.microservice.stock.domain.exceptions.EmptyFieldException;
-//import com.microservice.stock.domain.exceptions.FieldTooLongException;
-import com.microservice.stock.domain.util.DomainConstants;
-
 public class Brand {
     private Long id;
     private String name;
