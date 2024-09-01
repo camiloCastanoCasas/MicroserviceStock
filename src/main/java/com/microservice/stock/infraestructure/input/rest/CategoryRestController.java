@@ -1,7 +1,9 @@
 package com.microservice.stock.infraestructure.input.rest;
 
 import com.microservice.stock.application.dto.request.CategoryRequest;
+import com.microservice.stock.application.dto.response.CategoryResponse;
 import com.microservice.stock.application.handler.ICategoryHandler;
+import com.microservice.stock.domain.util.Pagination;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,10 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/category")
@@ -33,5 +32,16 @@ public class CategoryRestController {
     public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         categoryHandler.createCategory(categoryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Pagination<CategoryResponse>> listCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortby,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        Pagination<CategoryResponse> response = categoryHandler.listCategories(page, size, sortby, sortDirection);
+        return ResponseEntity.ok(response);
     }
 }
