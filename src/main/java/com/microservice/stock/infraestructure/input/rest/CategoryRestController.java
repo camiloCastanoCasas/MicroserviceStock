@@ -2,8 +2,8 @@ package com.microservice.stock.infraestructure.input.rest;
 
 import com.microservice.stock.application.dto.request.CategoryRequest;
 import com.microservice.stock.application.dto.response.CategoryResponse;
+import com.microservice.stock.application.dto.response.PaginationResponse;
 import com.microservice.stock.application.handler.ICategoryHandler;
-import com.microservice.stock.domain.util.Pagination;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,13 +35,13 @@ public class CategoryRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Pagination<CategoryResponse>> listCategories(
+    public ResponseEntity<PaginationResponse<CategoryResponse>> listCategories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortby,
+            @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
-        Pagination<CategoryResponse> response = categoryHandler.listCategories(page, size, sortby, sortDirection);
+        PaginationResponse<CategoryResponse> response = categoryHandler.listCategories(page, size, sortBy, sortDirection);
         return ResponseEntity.ok(response);
     }
 }

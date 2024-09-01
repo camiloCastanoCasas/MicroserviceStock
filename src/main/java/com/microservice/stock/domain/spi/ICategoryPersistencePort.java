@@ -6,5 +6,5 @@ import com.microservice.stock.domain.util.Pagination;
 public interface ICategoryPersistencePort {
     void createCategory(Category category);
     boolean existsByName(String name);
-    Pagination<Category> listCategory(int pageNumber, int pageSize, String sortby, String sortDirection);
+    Pagination<Category> listCategory(int pageNumber, int pageSize, String sortBy, String sortDirection);
 }

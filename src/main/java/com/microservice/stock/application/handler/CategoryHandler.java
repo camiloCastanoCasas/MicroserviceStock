@@ -2,7 +2,9 @@ package com.microservice.stock.application.handler;
 
 import com.microservice.stock.application.dto.request.CategoryRequest;
 import com.microservice.stock.application.dto.response.CategoryResponse;
+import com.microservice.stock.application.dto.response.PaginationResponse;
 import com.microservice.stock.application.mapper.ICategoryRequestMapper;
+import com.microservice.stock.application.mapper.ICategoryResponseMapper;
 import com.microservice.stock.domain.api.ICategoryServicePort;
 import com.microservice.stock.domain.model.Category;
 import com.microservice.stock.domain.util.Pagination;
@@ -11,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class CategoryHandler implements ICategoryHandler {
 
     private final ICategoryServicePort categoryServicePort;
     private final ICategoryRequestMapper categoryRequestMapper;
+    private final ICategoryResponseMapper categoryResponseMapper;
 
     @Override
     public void createCategory(CategoryRequest categoryRequest) {
@@ -28,23 +30,22 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public Pagination<CategoryResponse> listCategories(int pageNumber, int pageSize, String sortby, String sortDirection) {
-        // Obtener la paginación de categorías del servicio
-        Pagination<Category> categoryPagination = categoryServicePort.listCategory(pageNumber, pageSize, sortby, sortDirection);
+    public PaginationResponse<CategoryResponse> listCategories(int pageNumber, int pageSize, String sortBy, String sortDirection) {
+        // Retrieve the category pagination from the service
+        Pagination<Category> categoryPagination = categoryServicePort.listCategory(pageNumber, pageSize, sortBy, sortDirection);
 
-        // Convertir las categorías a DTOs
+        // Convert categories to DTOs
         List<CategoryResponse> categoryResponses = categoryPagination.getContent().stream()
-                .map(category -> categoryRequestMapper.toCategoryResponse(category))
-                .collect(Collectors.toList());
+                .map(categoryRequestMapper::toCategoryResponse)
+                .toList();
 
-        // Crear el objeto Pagination para la respuesta
+        // Create the Pagination object for the response
         Pagination<CategoryResponse> responsePagination = new Pagination<>(
                 categoryResponses,
                 categoryPagination.getPageNumber(),
                 categoryPagination.getPageSize(),
                 categoryPagination.getTotalElements()
         );
-
-        return responsePagination;
+        return categoryResponseMapper.toPaginationResponse(responsePagination);
     }
 }

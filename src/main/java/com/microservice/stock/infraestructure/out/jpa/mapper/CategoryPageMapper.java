@@ -6,9 +6,6 @@ import com.microservice.stock.infraestructure.out.jpa.entity.CategoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 public class CategoryPageMapper {
 
@@ -18,7 +15,7 @@ public class CategoryPageMapper {
         Pagination<Category> pagination = new Pagination<>();
         pagination.setContent(page.getContent().stream()
                 .map(categoryEntityMapper::toDomain)
-                .collect(Collectors.toList()));
+                .toList());
         pagination.setPageNumber(page.getNumber());
         pagination.setPageSize(page.getSize());
         pagination.setTotalElements(page.getTotalElements());
