@@ -5,6 +5,7 @@ import com.microservice.stock.domain.exceptions.ValidationException;
 import com.microservice.stock.domain.model.Category;
 import com.microservice.stock.domain.spi.ICategoryPersistencePort;
 import com.microservice.stock.domain.util.DomainConstants;
+import com.microservice.stock.domain.util.Pagination;
 
 import java.util.ArrayList;
 
@@ -39,5 +40,27 @@ public class CategoryUseCase implements ICategoryServicePort {
             throw new ValidationException(errors);
         }
         categoryPersistencePort.createCategory(category);
+    }
+
+    @Override
+    public Pagination<Category> listCategory(int pageNumber, int pageSize, String sortby, String sortDirection) {
+        ArrayList<String> errors = new ArrayList<>();
+
+        if (pageNumber < 0) {
+            errors.add(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
+        }
+        if (pageSize <= 0) {
+            errors.add(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
+        }
+        if (!sortby.equalsIgnoreCase(DomainConstants.VALID_SORT_FIELD)) {
+            errors.add(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
+        }
+        if (!sortDirection.equalsIgnoreCase(DomainConstants.ORDER_ASC) && !sortDirection.equalsIgnoreCase(DomainConstants.ORDER_DESC)) {
+            errors.add(DomainConstants.INVALID_SORT_DIRECTION_MESSAGE);
+        }
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+        return categoryPersistencePort.listCategory(pageNumber, pageSize, sortby, sortDirection);
     }
 }
