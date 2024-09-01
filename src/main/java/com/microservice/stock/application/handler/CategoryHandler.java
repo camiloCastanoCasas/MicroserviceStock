@@ -36,7 +36,7 @@ public class CategoryHandler implements ICategoryHandler {
 
         // Convert categories to DTOs
         List<CategoryResponse> categoryResponses = categoryPagination.getContent().stream()
-                .map(categoryRequestMapper::toCategoryResponse)
+                .map(categoryResponseMapper::toCategoryResponse)
                 .toList();
 
         // Create the Pagination object for the response
