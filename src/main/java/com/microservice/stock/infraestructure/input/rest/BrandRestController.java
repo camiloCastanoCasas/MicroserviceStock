@@ -1,7 +1,6 @@
 package com.microservice.stock.infraestructure.input.rest;
 
 import com.microservice.stock.application.dto.request.BrandRequest;
-import com.microservice.stock.application.dto.response.PaginationCategoryResponse;
 import com.microservice.stock.application.handler.IBrandHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
