@@ -28,4 +28,6 @@ public final class DomainConstants {
     public static final String VALID_SORT_FIELD = "name";
     public static final String ORDER_ASC = "asc";
     public static final String ORDER_DESC = "desc";
+    public static final String INVALID_PAGE_NUMBER_NULL_MESSAGE = "The page number cannot be null or empty";
+    public static final String INVALID_PAGE_SIZE_NULL_MESSAGE = "The page size cannot be null or empty";
 }

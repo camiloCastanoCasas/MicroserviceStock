@@ -36,9 +36,9 @@ public class CategoryRestController {
 
     @GetMapping
     public ResponseEntity<PaginationResponse<CategoryResponse>> listCategories(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         PaginationResponse<CategoryResponse> response = categoryHandler.listCategories(page, size, sortBy, sortDirection);
