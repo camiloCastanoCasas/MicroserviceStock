@@ -30,6 +30,11 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     }
 
     @Override
+    public boolean existById(Long id) {
+        return categoryRepository.findById(id).isPresent();
+    }
+
+    @Override
     public Pagination<Category> listCategory(int pageNumber, int pageSize, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Order.by(sortBy).with(Sort.Direction.fromString(sortDirection)));
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
