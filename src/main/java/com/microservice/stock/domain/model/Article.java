@@ -7,12 +7,12 @@ public class Article {
     private Long id;
     private String name;
     private String description;
-    private int quantity;
+    private Integer quantity;
     private BigDecimal price;
     private Brand brand;
     private List<Category> categories;
 
-    public Article(Long id, String name, String description, int quantity, BigDecimal price, Brand brand, List<Category> categories) {
+    public Article(Long id, String name, String description, Integer quantity, BigDecimal price, Brand brand, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -46,11 +46,11 @@ public class Article {
         this.description = description;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

@@ -1,7 +1,5 @@
 package com.microservice.stock.domain.util;
 
-import java.util.Set;
-
 public final class DomainConstants {
 
     private DomainConstants(){
@@ -28,4 +26,10 @@ public final class DomainConstants {
     public static final String VALID_SORT_FIELD = "name";
     public static final String ORDER_ASC = "asc";
     public static final String ORDER_DESC = "desc";
+
+    public static final String CATEGORY_AT_LEAST_ONE_MESSAGE = "Article must have at least one category.";
+    public static final String CATEGORY_MORE_THAN_THREE_MESSAGE = "Article cannot have more than three categories.";
+    public static final String CATEGORY_DUPLICATE_MESSAGE = "Article contains duplicate categories.";
+    public static final String CATEGORY_DOES_NOT_EXISTS = "Category with id is %d does not exists ";
+    public static final String BRAND_DOES_NOT_EXISTS = "Brand with id is %d does not exists";
 }
