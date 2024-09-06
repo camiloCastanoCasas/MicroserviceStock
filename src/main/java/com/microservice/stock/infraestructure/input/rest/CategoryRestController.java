@@ -4,6 +4,7 @@ import com.microservice.stock.application.dto.request.CategoryRequest;
 import com.microservice.stock.application.dto.response.CategoryResponse;
 import com.microservice.stock.application.dto.response.PaginationResponse;
 import com.microservice.stock.application.handler.ICategoryHandler;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,11 +35,24 @@ public class CategoryRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Category Pagination",
+              tags = { "Category", "Pagination" },
+              description = "This operation retrieves a paginated list of available categories in the system. Clients can specify the desired page number and page size, as well as sort the categories in ascending or descending order by their name.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters",
+                    content = @Content),
+    })
     @GetMapping
     public ResponseEntity<PaginationResponse<CategoryResponse>> listCategories(
+            @Parameter(description = "Page number to retrieve (starting from 0)")
             @RequestParam(required = false) Integer page,
+            @Parameter(description = "Number of elements per page")
             @RequestParam(required = false) Integer size,
+            @Parameter(description = "Sorting criteria 'name'")
             @RequestParam(required = false) String sortBy,
+            @Parameter(description = "Sorting criteria, 'asc' or 'desc'")
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         PaginationResponse<CategoryResponse> response = categoryHandler.listCategories(page, size, sortBy, sortDirection);
