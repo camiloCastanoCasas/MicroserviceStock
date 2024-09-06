@@ -4,6 +4,7 @@ import com.microservice.stock.domain.exceptions.ValidationException;
 import com.microservice.stock.domain.model.Category;
 import com.microservice.stock.domain.spi.ICategoryPersistencePort;
 import com.microservice.stock.domain.util.DomainConstants;
+import com.microservice.stock.domain.util.Pagination;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,9 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryUseCaseTest {
@@ -26,27 +28,26 @@ class CategoryUseCaseTest {
     private CategoryUseCase categoryUseCase;
 
     @Test
-    @DisplayName("Dada una categoria debe insertarla correctamente en la base de datos.")
+    @DisplayName("Given a category, it should be inserted correctly into the database.")
     void createCategory() {
-        //Given (Dado)
+        //Given
         Category category = new Category(1L, "CategoryName", "DescriptionName");
-
         Mockito.when(categoryPersistencePort.existsByName("CategoryName")).thenReturn(false);
-        //When (Cuando)
 
+        //When
         categoryUseCase.createCategory(category);
 
-        //Then (Entonces)
+        //Then
         Mockito.verify(categoryPersistencePort, Mockito.times(1)).createCategory(category);
     }
 
     @Test
-    @DisplayName("Debe lanzar una ValidationException cuando el nombre está vacío.")
+    @DisplayName("Throw a ValidationException when the name is empty.")
     void createCategory_ShouldThrowValidationException_WhenNameIsEmpty() {
-        // Given (Dado)
+        // Given
         Category category = new Category(1L, "", "DescriptionName");
 
-        // When & Then (Cuando & Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -56,13 +57,13 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar ValidationException cuando el nombre de la categoría supera los 50 caracteres.")
+    @DisplayName("Throw a ValidationException when the category name exceeds 50 characters.")
     void createCategory_NameTooLong_ShouldThrowValidationException() {
-        // Given (Dado)
+        // Given
         String longName = "A".repeat(51);
         Category category = new Category(1L, longName, "DescriptionName");
 
-        // When (Cuando) y Then (Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -72,12 +73,12 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar ValidationException cuando la descripción de la categoría está vacía.")
+    @DisplayName("Throw a ValidationException when the category description is empty.")
     void createCategory_EmptyDescription_ShouldThrowValidationException() {
-        // Given (Dado)
+        // Given
         Category category = new Category(1L, "CategoryName", "");
 
-        // When (Cuando) y Then (Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -87,13 +88,13 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar ValidationException cuando la descripción de la categoría supera los 90 caracteres.")
+    @DisplayName("Throw a ValidationException when the category description exceeds 90 characters.")
     void createCategory_DescriptionTooLong_ShouldThrowValidationException() {
-        // Given (Dado)
+        // Given
         String longDescription = "This description is deliberately made very long to exceed the maximum allowed length of ninety characters.";
         Category category = new Category(1L, "CategoryName", longDescription);
 
-        // When (Cuando) y Then (Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -103,12 +104,12 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar ValidationException cuando el nombre y la descripción de la categoría está vacía.")
+    @DisplayName("Throw a ValidationException when both the category name and description are empty.")
     void createCategory_EmptyNameAndDescription_ShouldThrowValidationException() {
-        // Given (Dado)
+        // Given
         Category category = new Category(1L, "", "");
 
-        // When (Cuando) y Then (Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -118,14 +119,14 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar ValidationException cuando el nombre de la categoría supera los 50 caracteres y la descripción los 90 caracteres.")
+    @DisplayName("Throw a ValidationException when the category name exceeds 50 characters and the description exceeds 90 characters.")
     void createCategory_NameAndDescriptionTooLong_ShouldThrowValidationException() {
-        // Given (Dado)
+        // Given
         String longName = "A".repeat(51);
         String longDescription = "A".repeat(91);
         Category category = new Category(1L, longName, longDescription);
 
-        // When (Cuando) y Then (Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -135,15 +136,13 @@ class CategoryUseCaseTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar una ValidationException cuando la categoría ya existe.")
+    @DisplayName("Throw a ValidationException when the category already exists.")
     void createCategory_ShouldThrowValidationException_WhenCategoryAlreadyExists() {
-        // Given (Dado)
+        // Given
         Category category = new Category(1L, "ExistingCategory", "DescriptionName");
-
-        // Simulamos que ya existe una categoría con el mismo nombre
         Mockito.when(categoryPersistencePort.existsByName("ExistingCategory")).thenReturn(true);
 
-        // When & Then (Cuando & Entonces)
+        // When & Then
         ValidationException exception = assertThrows(ValidationException.class, () -> {
             categoryUseCase.createCategory(category);
         });
@@ -151,4 +150,87 @@ class CategoryUseCaseTest {
         assertThat(exception.getErrors()).contains(DomainConstants.CATEGORY_EXISTS_MESSAGE);
         Mockito.verify(categoryPersistencePort, Mockito.never()).createCategory(category);
     }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is null.")
+    void listCategory_ShouldThrowValidationException_WhenPageNumberIsNull() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(null, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is null.")
+    void listCategory_ShouldThrowValidationException_WhenPageSizeIsNull() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(0, null, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is negative.")
+    void listCategory_ShouldThrowValidationException_WhenPageNumberIsNegative() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(-1, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is less than or equal to zero.")
+    void listCategory_ShouldThrowValidationException_WhenPageSizeIsLessThanOrEqualZero() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(0, 0, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort field is invalid.")
+    void listCategory_ShouldThrowValidationException_WhenSortByIsInvalid() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(0, 10, "invalidField", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort direction is invalid.")
+    void listCategory_ShouldThrowValidationException_WhenSortDirectionIsInvalid() {
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            categoryUseCase.listCategory(0, 10, "name", "invalidDirection");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_DIRECTION_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Should list categories correctly with valid parameters and verify category details.")
+    void listCategory_ShouldReturnCategoriesWithDetails_WhenParametersAreValid() {
+        // Given
+        Category category = new Category(1L, "Category1", "Description1");
+        Pagination<Category> pagination = new Pagination<>(List.of(category), 0, 10, 1L);
+
+        Mockito.when(categoryPersistencePort.listCategory(0, 10, "name", "asc")).thenReturn(pagination);
+
+        // When
+        Pagination<Category> result = categoryUseCase.listCategory(0, 10, "name", "asc");
+
+        // Then
+        assertNotNull(result, "The result should not be null.");
+        assertFalse(result.getContent().isEmpty(), "The content should not be empty.");
+        assertEquals(1, result.getContent().size(), "The number of categories should be 1.");
+
+        // Verify the details of the returned category
+        Category returnedCategory = result.getContent().get(0);
+        assertEquals(1L, returnedCategory.getId(), "The category ID should be 1L.");
+        assertEquals("Category1", returnedCategory.getName(), "The category name should be 'Category1'.");
+        assertEquals("Description1", returnedCategory.getDescription(), "The category description should be 'Description1'.");
+
+        // Verify that the persistence port method was called once with the correct parameters
+        Mockito.verify(categoryPersistencePort, Mockito.times(1)).listCategory(0, 10, "name", "asc");
+    }
+
+
 }
