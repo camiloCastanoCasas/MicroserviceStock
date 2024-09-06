@@ -22,7 +22,14 @@ public class CategoryRestController {
 
     private final ICategoryHandler categoryHandler;
 
-    @Operation(summary = "Create category")
+    @Operation(summary = "Create category",
+               tags = { "Category"},
+               description = "This operation allows the creation of a new category in the system. "
+                    + "The category must have a unique name, and the name and description "
+                    + "fields must comply with validation rules such as not being empty and "
+                    + "not exceeding the maximum length. If the category is successfully created, "
+                    + "a status code of 201 is returned."
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Category created successfully",
                     content = @Content),
