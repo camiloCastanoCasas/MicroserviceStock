@@ -6,7 +6,7 @@ import com.microservice.stock.application.dto.response.PaginationResponse;
 
 public interface ICategoryHandler {
     void createCategory(CategoryRequest categoryRequest);
-    PaginationResponse<CategoryResponse> listCategories(int pageNumber, int pageSize, String sortBy, String sortDirection);
+    PaginationResponse<CategoryResponse> listCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
 
 }
 
