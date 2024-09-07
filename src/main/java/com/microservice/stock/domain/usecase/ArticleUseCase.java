@@ -37,14 +37,12 @@ public class ArticleUseCase implements IArticleServicePort {
         }
         if(article.getPrice() == null){
             errors.add(DomainConstants.FIELD_PRICE_NOT_NULL_MESSAGE);
-        }
-        if(article.getPrice().compareTo(BigDecimal.ZERO) <= 0){
+        } else if (article.getPrice().compareTo(BigDecimal.ZERO) <= 0){
             errors.add(DomainConstants.FIELD_PRICE_NOT_POSITIVE_MESSAGE);
         }
         if(article.getQuantity() == null){
             errors.add(DomainConstants.FIELD_QUANTITY_NOT_NULL_MESSAGE);
-        }
-        if(article.getQuantity() < 0){
+        }else if(article.getQuantity() < 0){
             errors.add(DomainConstants.FIELD_QUANTITY_NOT_POSITIVE_OR_ZERO_MESSAGE);
         }
         if (article.getCategories().isEmpty()) {
