@@ -6,5 +6,6 @@ import com.microservice.stock.domain.util.Pagination;
 public interface IBrandPersistencePort {
     void createBrand(Brand brand);
     boolean existsByName(String name);
-    Pagination<Brand> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
+    boolean existById(Long id);
+    Pagination<Brand> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection);
 }
