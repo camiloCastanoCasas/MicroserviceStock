@@ -4,6 +4,7 @@ import com.microservice.stock.domain.exceptions.ValidationException;
 import com.microservice.stock.domain.model.Brand;
 import com.microservice.stock.domain.spi.IBrandPersistencePort;
 import com.microservice.stock.domain.util.DomainConstants;
+import com.microservice.stock.domain.util.Pagination;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +13,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class BrandUseCaseTest {
@@ -154,5 +157,86 @@ class BrandUseCaseTest {
         //Then
         assertThat(exception.getErrors()).contains(DomainConstants.BRAND_EXISTS_MESSAGE);
         Mockito.verify(brandPersistencePort, Mockito.never()).createBrand(brand);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is null.")
+    void listBrands_ShouldThrowValidationException_WhenPageNumberIsNull(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+           brandUseCase.listBrands(null, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is null.")
+    void listBrands_ShouldThrowValidationException_WhenPageSizeIsNull(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            brandUseCase.listBrands(0, null, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is negative.")
+    void listBrands_ShouldThrowValidationException_WhenPageNumberIsNegative(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            brandUseCase.listBrands(-1, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is less than or equal to zero.")
+    void listBrands_ShouldThrowValidationException_WhenPageSizeIsLessThanOrEqualZero(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            brandUseCase.listBrands(0, 0, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort field is invalid.")
+    void listBrands_ShouldThrowValidationException_WhenSortByIsInvalid(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            brandUseCase.listBrands(0, 10, "invalidField", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort direction is invalid.")
+    void listBrands_ShouldThrowValidationException_WhenSortDirectionIsInvalid(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            brandUseCase.listBrands(0, 10, "name", "invalidDirection");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_DIRECTION_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Should list brands correctly with valid parameters and verify brand details.")
+    void listBrands_ShouldReturnBrandsWithDetails_WhenParametersAreValid(){
+        //Given
+        Brand brand = new Brand(1L, "Brand1", "Description1");
+        Pagination<Brand> pagination = new Pagination<>(List.of(brand),0,10,1L);
+
+        Mockito.when(brandPersistencePort.listBrands(0,10,"name","asc")).thenReturn(pagination);
+
+        //When
+        Pagination<Brand> result = brandUseCase.listBrands(0,10,"name","asc");
+
+        //Then
+        assertNotNull(result, "The result should not be null.");
+        assertFalse(result.getContent().isEmpty(), "The content should not be empty.");
+        assertEquals(1, result.getContent().size(), "The number of categories should be 1.");
+
+        // Verify the details of the returned brand
+        Brand returnedBrand = result.getContent().get(0);
+        assertEquals(1L, returnedBrand.getId(), "The Brand ID should be 1L");
+        assertEquals("Brand1", returnedBrand.getName(), "The brand name should be 'Brand1'.");
+        assertEquals("Description1", returnedBrand.getDescription(), "The brand description should be 'Description1'.");
+
+        // Verify that the persistence port method was called once with the correct parameters
+        Mockito.verify(brandPersistencePort, Mockito.times(1)).listBrands(0, 10, "name", "asc");
     }
 }
