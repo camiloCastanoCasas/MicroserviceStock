@@ -214,8 +214,8 @@ class BrandUseCaseTest {
     }
 
     @Test
-    @DisplayName("Should list categories correctly with valid parameters and verify category details.")
-    void listBrands_ShouldReturnCategoriesWithDetails_WhenParametersAreValid(){
+    @DisplayName("Should list brands correctly with valid parameters and verify brand details.")
+    void listBrands_ShouldReturnBrandsWithDetails_WhenParametersAreValid(){
         //Given
         Brand brand = new Brand(1L, "Brand1", "Description1");
         Pagination<Brand> pagination = new Pagination<>(List.of(brand),0,10,1L);
