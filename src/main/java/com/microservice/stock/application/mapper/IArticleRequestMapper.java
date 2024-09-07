@@ -9,20 +9,18 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface IArticleRequestMapper {
 
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "mapCategoryIdsToCategories")
     @Mapping(source = "brandId", target = "brand", qualifiedByName = "mapBrandIdToBrand")
-    @Mapping(target = "id", ignore = true) // Ignorar el mapeo del ID si no viene en el request
+    @Mapping(target = "id", ignore = true)
     Article toArticle(ArticleRequest articleRequest);
 
     @Named("mapCategoryIdsToCategories")
     default List<Category> mapCategoryIdsToCategories(List<Long> categoryIds) {
-        return categoryIds.stream().map(id -> new Category(id, null, null)).collect(Collectors.toList());
+        return categoryIds.stream().map(id -> new Category(id, null, null)).toList();
     }
 
     @Named("mapBrandIdToBrand")

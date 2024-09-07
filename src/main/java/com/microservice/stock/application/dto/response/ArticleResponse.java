@@ -12,7 +12,7 @@ public class ArticleResponse {
     private String name;
     private String description;
     private double price;
-    private int quantity;
+    private Integer quantity;
     private List<String> categories;
     private String brand;
 }

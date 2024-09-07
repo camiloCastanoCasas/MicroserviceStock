@@ -1,7 +1,5 @@
 package com.microservice.stock.infraestructure.out.jpa.entity;
 
-import com.microservice.stock.domain.model.Brand;
-import com.microservice.stock.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
