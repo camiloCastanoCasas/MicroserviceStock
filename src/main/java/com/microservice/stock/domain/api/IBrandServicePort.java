@@ -5,5 +5,5 @@ import com.microservice.stock.domain.util.Pagination;
 
 public interface IBrandServicePort {
     void createBrand(Brand brand);
-    Pagination<Brand> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection);
+    Pagination<Brand> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
 }
