@@ -30,7 +30,7 @@ public class CategoryHandler implements ICategoryHandler {
     }
 
     @Override
-    public PaginationResponse<CategoryResponse> listCategories(int pageNumber, int pageSize, String sortBy, String sortDirection) {
+    public PaginationResponse<CategoryResponse> listCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
         // Retrieve the category pagination from the service
         Pagination<Category> categoryPagination = categoryServicePort.listCategory(pageNumber, pageSize, sortBy, sortDirection);
 
