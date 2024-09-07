@@ -30,7 +30,12 @@ public class BrandJpaAdapter implements IBrandPersistencePort {
     }
 
     @Override
-    public Pagination<Brand> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+    public boolean existById(Long id) {
+        return brandRepository.findById(id).isPresent();
+    }
+
+    @Override
+    public Pagination<Brand> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Order.by(sortBy).with(Sort.Direction.fromString(sortDirection)));
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
