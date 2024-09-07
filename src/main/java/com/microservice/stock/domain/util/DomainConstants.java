@@ -26,6 +26,8 @@ public final class DomainConstants {
     public static final String VALID_SORT_FIELD = "name";
     public static final String ORDER_ASC = "asc";
     public static final String ORDER_DESC = "desc";
+    public static final String INVALID_PAGE_NUMBER_NULL_MESSAGE = "Page number cannot be null.";
+    public static final String INVALID_PAGE_SIZE_NULL_MESSAGE = "Page size cannot be null.";
   
     public static final String CATEGORY_AT_LEAST_ONE_MESSAGE = "Article must have at least one category.";
     public static final String CATEGORY_MORE_THAN_THREE_MESSAGE = "Article cannot have more than three categories.";
