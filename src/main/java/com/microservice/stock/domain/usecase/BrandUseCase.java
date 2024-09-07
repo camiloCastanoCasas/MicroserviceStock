@@ -43,16 +43,20 @@ public class BrandUseCase implements IBrandServicePort {
     }
 
     @Override
-    public Pagination<Brand> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection) {
+    public Pagination<Brand> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
         ArrayList<String> errors = new ArrayList<>();
 
-        if (pageNumber < 0) {
+        if(pageNumber == null){
+            errors.add(DomainConstants.INVALID_PAGE_NUMBER_NULL_MESSAGE);
+        } else if(pageNumber < 0) {
             errors.add(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
         }
-        if (pageSize <= 0) {
+        if(pageSize == null){
+            errors.add(DomainConstants.INVALID_PAGE_SIZE_NULL_MESSAGE);
+        } else if (pageSize <= 0) {
             errors.add(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
         }
-        if (!sortBy.equalsIgnoreCase(DomainConstants.VALID_SORT_FIELD)) {
+        if (sortBy == null || !sortBy.equalsIgnoreCase(DomainConstants.VALID_SORT_FIELD)) {
             errors.add(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
         }
         if (!sortDirection.equalsIgnoreCase(DomainConstants.ORDER_ASC) && !sortDirection.equalsIgnoreCase(DomainConstants.ORDER_DESC)) {
