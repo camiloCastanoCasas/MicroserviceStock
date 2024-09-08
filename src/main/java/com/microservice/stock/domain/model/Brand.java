@@ -1,27 +1,11 @@
 package com.microservice.stock.domain.model;
 
-import com.microservice.stock.domain.exceptions.EmptyFieldException;
-import com.microservice.stock.domain.exceptions.FieldTooLongException;
-import com.microservice.stock.domain.util.DomainConstants;
-
 public class Brand {
     private Long id;
     private String name;
     private String description;
 
     public Brand(Long id, String name, String description) {
-        if(name.trim().isEmpty()) {
-            throw new EmptyFieldException(DomainConstants.FIELD_NAME_NULL_MESSAGE);
-        }
-        if(name.length() > DomainConstants.FIELD_NAME_BRAND_SIZE_MAX) {
-            throw new FieldTooLongException(DomainConstants.FIELD_NAME_BRAND_SIZE_MESSAGE);
-        }
-        if(description.trim().isEmpty()) {
-            throw new EmptyFieldException(DomainConstants.FIELD_DESCRIPTION_NULL_MESSAGE);
-        }
-        if(description.length() > DomainConstants.FIELD_DESCRIPTION_BRAND_SIZE_MAX) {
-            throw new FieldTooLongException(DomainConstants.FIELD_DESCRIPTION_BRAND_SIZE_MESSAGE);
-        }
         this.id = id;
         this.name = name;
         this.description = description;
