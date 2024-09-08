@@ -7,6 +7,7 @@ import com.microservice.stock.domain.spi.IArticlePersistencePort;
 import com.microservice.stock.domain.spi.IBrandPersistencePort;
 import com.microservice.stock.domain.spi.ICategoryPersistencePort;
 import com.microservice.stock.domain.util.DomainConstants;
+import com.microservice.stock.domain.util.Pagination;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -76,5 +77,31 @@ public class ArticleUseCase implements IArticleServicePort {
             throw new ValidationException(errors);
         }
         articlePersistencePort.createArticle(article);
+    }
+
+    @Override
+    public Pagination<Article> listArticles(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+        ArrayList<String> errors = new ArrayList<>();
+
+        if(pageNumber == null){
+            errors.add(DomainConstants.INVALID_PAGE_NUMBER_NULL_MESSAGE);
+        } else if(pageNumber < 0) {
+            errors.add(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
+        }
+        if(pageSize == null){
+            errors.add(DomainConstants.INVALID_PAGE_SIZE_NULL_MESSAGE);
+        } else if (pageSize <= 0) {
+            errors.add(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
+        }
+        if (sortBy == null || !DomainConstants.VALID_SORT_FIELDS.contains(sortBy)) {
+            errors.add(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
+        }
+        if (!sortDirection.equalsIgnoreCase(DomainConstants.ORDER_ASC) && !sortDirection.equalsIgnoreCase(DomainConstants.ORDER_DESC)) {
+            errors.add(DomainConstants.INVALID_SORT_DIRECTION_MESSAGE);
+        }
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+        return articlePersistencePort.listArticles(pageNumber, pageSize,sortBy,sortDirection);
     }
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -13,6 +14,6 @@ public class ArticleResponse {
     private String description;
     private double price;
     private Integer quantity;
-    private List<String> categories;
+    private List<Map<String, Object>> categories;
     private String brand;
 }
