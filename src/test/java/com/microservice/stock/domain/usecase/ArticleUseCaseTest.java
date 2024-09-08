@@ -8,6 +8,7 @@ import com.microservice.stock.domain.spi.IArticlePersistencePort;
 import com.microservice.stock.domain.spi.IBrandPersistencePort;
 import com.microservice.stock.domain.spi.ICategoryPersistencePort;
 import com.microservice.stock.domain.util.DomainConstants;
+import com.microservice.stock.domain.util.Pagination;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
@@ -388,5 +390,104 @@ class ArticleUseCaseTest {
         Mockito.verify(articlePersistencePort, Mockito.never()).createArticle(article);
         Mockito.verify(categoryPersistencePort, times(1)).existById(article.getCategories().get(0).getId());
         Mockito.verify(brandPersistencePort, times(1)).existById(article.getBrand().getId());
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is null.")
+    void listArticles_ShouldThrowValidationException_WhenPageNumberIsNull(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(null, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is null.")
+    void listArticles_ShouldThrowValidationException_WhenPageSizeIsNull(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(0, null, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_NULL_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page number is negative.")
+    void listArticles_ShouldThrowValidationException_WhenPageNumberIsNegative(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(-1, 10, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_NUMBER_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the page size is less than or equal to zero.")
+    void listArticles_ShouldThrowValidationException_WhenPageSizeIsLessThanOrEqualZero(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(0, 0, "name", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_PAGE_SIZE_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort field is invalid.")
+    void listArticles_ShouldThrowValidationException_WhenSortByIsInvalid(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(0, 10, "invalidField", "asc");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_FIELD_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Throw a ValidationException when the sort direction is invalid.")
+    void listArticles_ShouldThrowValidationException_WhenSortDirectionIsInvalid(){
+        ValidationException exception = assertThrows(ValidationException.class, () -> {
+            articleUseCase.listArticles(0, 10, "name", "invalidDirection");
+        });
+        assertThat(exception.getErrors()).contains(DomainConstants.INVALID_SORT_DIRECTION_MESSAGE);
+    }
+
+    @Test
+    @DisplayName("Should list articles correctly with valid parameters and verify article details.")
+    void listArticles_ShouldReturnBrandsWithDetails_WhenParametersAreValid(){
+        //Given
+        Article article = new Article(1L, "Article1", "Description", 3,
+                new BigDecimal("123.456"),
+                new Brand(1L, null, null),
+                List.of(
+                        new Category(1L, null, null)
+                )
+        );
+        Article article2 = new Article(2L, "B_Article", "Description", 3,
+                new BigDecimal("123.456"),
+                new Brand(1L, null, null),
+                List.of(
+                        new Category(1L, null, null)
+                )
+        );
+        Pagination<Article> pagination = new Pagination<>(List.of(article, article2),0,10,2L);
+
+        Mockito.when(articlePersistencePort.listArticles(0,10,"name","asc")).thenReturn(pagination);
+
+        //When
+        Pagination<Article> result = articleUseCase.listArticles(0,10,"name","asc");
+
+        //Then
+        assertNotNull(result, "The result should not be null.");
+        assertFalse(result.getContent().isEmpty(), "The content should not be empty.");
+        assertEquals(2, result.getContent().size(), "The number of articles should be 2.");
+
+        // Verify the details of the returned brand
+        Article returnedArticle1 = result.getContent().get(0);
+        assertEquals(1L, returnedArticle1.getId(), "The Article ID should be 1L");
+        assertEquals("Article1", returnedArticle1.getName(), "The article name should be 'Article1'.");
+        assertEquals("Description", returnedArticle1.getDescription(), "The article description should be 'Description'.");
+
+        Article returnedArticle2 = result.getContent().get(1);
+        assertEquals(2L, returnedArticle2.getId(), "The Article ID should be 1L");
+        assertEquals("B_Article", returnedArticle2.getName(), "The article name should be 'B_Article'.");
+        assertEquals("Description", returnedArticle2.getDescription(), "The article description should be 'Description'.");
+
+        // Verify that the persistence port method was called once with the correct parameters
+        Mockito.verify(articlePersistencePort, Mockito.times(1)).listArticles(0, 10, "name", "asc");
     }
 }
