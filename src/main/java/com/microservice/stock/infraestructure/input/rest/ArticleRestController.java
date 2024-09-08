@@ -42,13 +42,22 @@ public class ArticleRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "Article Pagination",
+            tags = { "Article", "Pagination" },
+            description = "This operation retrieves a paginated list of available articles in the system. Clients can specify the desired page number and page size, as well as sort the brands in ascending or descending order by their name, brand name or category name.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters",
+                    content = @Content),
+    })
     @GetMapping
     public ResponseEntity<PaginationResponse<ArticleResponse>> listArticles(
             @Parameter(description = "Page number to retrieve (starting from 0)")
             @RequestParam(required = false) Integer page,
             @Parameter(description = "Number of elements per page")
             @RequestParam(required = false) Integer size,
-            @Parameter(description = "Sorting criteria 'name'")
+            @Parameter(description = "Sorting criteria 'name', 'brandName' or 'categoryName'")
             @RequestParam(required = false) String sortBy,
             @Parameter(description = "Sorting criteria, 'asc' or 'desc'")
             @RequestParam(defaultValue = "asc") String sortDirection
