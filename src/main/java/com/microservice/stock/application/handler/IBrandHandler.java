@@ -6,5 +6,5 @@ import com.microservice.stock.application.dto.response.PaginationResponse;
 
 public interface IBrandHandler {
     void createBrand(BrandRequest brandRequest);
-    PaginationResponse<BrandResponse> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection);
+    PaginationResponse<BrandResponse> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
 }

@@ -30,7 +30,7 @@ public class BrandHandler implements IBrandHandler {
     }
 
     @Override
-    public PaginationResponse<BrandResponse> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection) {
+    public PaginationResponse<BrandResponse> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
 
         Pagination<Brand> brandPagination = brandServicePort.listBrands(pageNumber,pageSize,sortBy,sortDirection);
 

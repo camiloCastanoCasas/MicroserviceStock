@@ -21,7 +21,7 @@ public class ArticleEntity {
     private Long id;
     private String name;
     private String description;
-    private int quantity;
+    private Integer quantity;
     private BigDecimal price;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -35,7 +35,7 @@ public class CategoryJpaAdapter implements ICategoryPersistencePort {
     }
 
     @Override
-    public Pagination<Category> listCategory(int pageNumber, int pageSize, String sortBy, String sortDirection) {
+    public Pagination<Category> listCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
 
         Sort sort = Sort.by(Sort.Order.by(sortBy).with(Sort.Direction.fromString(sortDirection)));
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);

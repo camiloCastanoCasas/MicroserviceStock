@@ -7,5 +7,5 @@ public interface IBrandPersistencePort {
     void createBrand(Brand brand);
     boolean existsByName(String name);
     boolean existById(Long id);
-    Pagination<Brand> listBrands(int pageNumber, int pageSize, String sortBy, String sortDirection);
+    Pagination<Brand> listBrands(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection);
 }
