@@ -1,5 +1,8 @@
 package com.microservice.stock.domain.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class DomainConstants {
 
     private DomainConstants(){
@@ -45,4 +48,6 @@ public final class DomainConstants {
     public static final String FIELD_BRAND_ID_NOT_NULL_MESSAGE = "Brand ID cannot be null.";
     public static final String FIELD_BRAND_ID_NOT_POSITIVE_MESSAGE = "Brand ID must be a positive value.";
     public static final String ARTICLE_EXISTS_MESSAGE = "Article already exists";
+
+    public static final List<String> VALID_SORT_FIELDS = Arrays.asList("name", "brandName", "categoryName");
 }
